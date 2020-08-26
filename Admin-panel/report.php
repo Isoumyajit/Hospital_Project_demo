@@ -1,0 +1,267 @@
+<?php
+ include 'action_admin.php';
+if(!isset($_SESSION['uname']))
+{
+    header('location:admin_login.php');
+}
+?>
+<head>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+ <link rel="stylesheet"  href="admin.css">
+<!-- <!DOCTYPE html>
+<![if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+   <style>
+      section {
+           padding: 11rem 0;
+           background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(bg.jpg);
+           background-size:cover;
+           height:100%;
+       }
+       
+       .table-wrapper {
+           height: 350px;
+           /* background-color: orange; */
+           overflow: auto;
+           margin: 10px;
+           width:  850px;
+           margin-top: 50px;
+       }
+       .pdf-btn{
+
+           display: flex;
+           margin-bottom: 60px;
+           justify-content: center;
+           bottom: 70px;
+
+       }
+   </style>
+    </head>
+    <body>
+    <?php
+       include "header.php";
+    ?>
+         <!-- Modal starts here -->
+<div class="modal fade" id="sign-out">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Want to leave?</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    Press logout to leave
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-dismiss="modal">Stay Here</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="Myfunction()">Logout</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+    function Myfunction(){
+        window.location.href="logout.php";
+    }
+     </script>
+
+<section>
+
+    <div class="container-fluid">
+                   <div class="row justify-content-center">
+                     <?php if(isset($_SESSION['response'])){?>
+
+                            <div class="alert alert-<?= $_SESSION['res_type'] ; ?> alert-dismissible text-center">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <?= $_SESSION['response'] ;?> 
+                            </div>
+
+                     <?php      }  unset($_SESSION['response']) ?>
+                             </div>
+        <div class="row" style="margin-left:1px;">
+           <div calss="col-md-4" >
+                <h3 class="text-center text-info">Add Doctor</h3>
+                    <form method="POST" action="action_admin.php" enctype="multipart/form-data">
+            
+                                   <div class="form-group">
+                                    
+                                   <input name="did" class="form-control" type="text" placeholder="Enter the Docotor Id"  value="<?= $did;?>" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <input name="name" class="form-control" type="text" placeholder="Enter the Name" value="<?= $name;?>" required>
+                                        
+                                    </div>
+                                    <div class="form-group">
+                                        <input name="address" class="form-control" type="text" placeholder="Enter the Address" value="<?= $add;?>" required>
+                                        
+                                    </div>
+                                    <div class="form-group">
+                                        <input name="email" class="form-control" type="text" placeholder="Enter the email" value="<?= $email;?>" required>
+                                        
+                                    </div>
+                                    <div class="form-group">
+                                        <input name="phone" class="form-control" type="text" placeholder="Enter the phone" value="<?= $ph;?>" required>
+                                        
+                                    </div>
+                                    <div class="form-group">
+                                        <input name="dept" class="form-control" type="text" placeholder="Enter the Department" value="<?= $dept;?>" required>
+                                        
+                                    </div>
+                                    <div class="form-group">
+                                        <input name="image" class="custom-file" type="file" value="<?php echo $imageold;?>" required>
+                                        
+                                    </div>
+                                    <div class="form-group">
+                                        <?php
+
+                                        if($update == true){
+                                            ?>
+                                        <input type="submit" name="update-doctor" class="btn btn-success"   value="update" required>
+                                        <?php }
+                                        else{
+                                            ?>
+                                        <input type="submit" name="add-doctor" class="btn btn-primary"   value="submit" required>
+                                        <?php } ?>
+                                    </div>                    
+                        </form>
+            </div>
+                    <div class="col-md-8" style="bottom:5px;top:10px;margin-right:20px;left:5px;">
+                     <?php 
+                         $show = "SELECT DID,NAME,ADDRESS,PHONE,DEPT FROM DOCTOR";
+                         $result = $conn->query($show);
+
+                    ?>
+                            <div class="table-wrapper">
+                                    <table class="table hover-table text-center" style="bottom:100px;">
+                                                <thead>
+                                                <tr>
+                                                    <th>Did</th>
+                                                    <th>Name</th>
+                                                    <th>Address</th>
+                                                    <th>Phone</th>
+                                                    <th>Dept</th>
+                                                    
+                                                    <th>Action</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                     <?php 
+                                                    
+                                                     while($row = $result->fetch_assoc()){
+                                                    
+                                                    ?>
+                                                    <tr>
+                                                    <td><?=$row['DID']?></td>
+                                                    <td><?=$row['NAME']?></td>
+                                                    <td><?=$row['ADDRESS']?></td>
+                                                    <td><?=$row['PHONE']?></td>
+                                                    <td><?=$row['DEPT']?></td>
+                                                    
+                                                    <td>
+                                                    <a href="add_doctor.php?edit-doctor=<?=$row['DID'];?>" class="badge badge-success p-2">Edit</a> |
+                                                    <a href="action_admin.php?delete-doctor=<?=$row['DID'];?>" onclick="return confirm('Do You want to delete this record?');" class="badge badge-danger p-2">Delete</a></td>
+                                                    </tr>  
+                                                    <?php } ?>
+                                                </tbody>
+                                                    
+                                           </table>
+                     
+                                 </div>
+                            <form  class="pdf-btn"> 
+                        <div class="text-cente" >
+                                <button type="submit" class="btn btn-info p-2" name="pdf">download pdf</button>
+                        </div>
+                            </form>
+                 </div>
+        </div>
+ </div>
+                        <?php
+       
+        // if(isset($_POST['pdf'])) { 
+
+        //     // echo "This is Button1 that is selected"; 
+        //     // header('location:test_manage.php');
+        //     include_once("../db_connect.php");
+        //     $sql = "SELECT * FROM TEST_DETAILS";
+        //     $resulset = $conn->query($sql);
+        //     require('fpdf.php');
+        //     $pdf = new FPDF();
+        //     $pdf->AddPage();
+        //     $pdf->SetFont('Arial','B',12);
+        //     while($rows = $resultset->fetch_assoc()) {
+        //     $pdf->SetFont('Arial','',12);
+        //     $pdf->Ln();
+        //     foreach($rows as $column) {
+        //     $pdf->Cell(47,12,$column,1);
+        //     }
+        //     }
+        //     $pdf->Output();
+            
+        //     class myPDF extends FPDF{
+        //         function header(){
+        //             $this->Image('medica.png',10,5);
+        //             $this->SetFont('Arial','8',14);
+        //             $this->Cell(276,5,'Medica Test Details',0,0,'c');
+        //             $this->Ln();
+        //             $this->Cell(276,5,'219/1,VivekanadanaNagar,Kolaka',0,0,'c');
+        //             $this->Ln(20);
+
+        //         }
+        //         function footer(){
+        //             $this->SetY(-15);
+        //             $this->SetFont('Arial','',8);
+        //             $this->Cell(0,10,'Page'.$this->PageNo().'/{nb}',0,0,'c');
+        //         }
+        //         function headerTable(){
+        //             $this->SetFont('Times','B',12);
+        //             $this->Cell(20,10,'Pid',1,0,'c');
+        //             $this->Cell(40,10,'Tid',1,0,'c');
+        //             $this->Cell(40,10,'Name',1,0,'c');
+        //             $this->Cell(60,10,'Address',1,0,'c');
+        //             $this->Cell(60,10,'Email',1,0,'c');
+        //             $this->Cell(30,10,'Phone',1,0,'c');
+        //             $this->Cell(30,10,'Test',1,0,'c');
+        //             $this->Cell(30,10,'Payment',1,0,'c');
+        //             $this->Cell(50,10,'Date-Time',1,0,'c');
+        //             $this->Ln();
+        //             function viewTable(){
+        //                 $this->SetFont('Times','',12);
+            
+        //                 $all = "SELECT * FROM TEST_DETAILS";
+
+        //                $result = $conn->query($all);
+        //                 while($row = $result->fetch_assoc()){
+        //                     $this->SetFont('Times','B',12);
+        //                     $this->Cell(20,10,$row['PID'],1,0,'c');
+        //                     $this->Cell(40,10,$row['TID'],1,0,'c');
+        //                     $this->Cell(40,10,$row['NAME'],1,0,'c');
+        //                     $this->Cell(60,10,$row['ADDRESS'],1,0,'c');
+        //                     $this->Cell(60,10,$row['EMAIL'],1,0,'c');
+        //                     $this->Cell(30,10,$row['PHONE'],1,0,'c');
+        //                     $this->Cell(30,10,$row['TEST'],1,0,'c');
+        //                     $this->Cell(30,10,$row['PAYMENT'],1,0,'c');
+        //                     $this->Cell(50,10,$row['DATE'],1,0,'c');
+        //                     $this->Ln();
+        //                 }
+
+        //             }
+        //         }
+        //     }
+        // } 
+        // }
+        // ?>
+                                                    
+        <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+        </section>
+        </body>
+        <?php include 'footer.php' ?>
+    
+</html>
